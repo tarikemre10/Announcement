@@ -9,6 +9,13 @@ router.post('/company/internship-announcements/publish', AnnouncementController.
 router.put('/company/internship-announcements/:id', AnnouncementController.updateInternshipAnnouncement);
 router.delete('/company/internship-announcements/:id/delete', AnnouncementController.deleteInternshipAnnouncement);
 
+router.get('/admin/waiting-announcements', AnnouncementController.getWaitingAnnouncements);
+router.get('/admin/waiting-announcements/:id', AnnouncementController.getAnnouncementbyId);
+router.put('/admin/waiting-announcements/:id/approve', AnnouncementController.approveAnnouncement);
+router.delete('/admin/waiting-announcements/:id/reject', AnnouncementController.deleteInternshipAnnouncement);
+
+router.get('/student/internship-announcements',AnnouncementController.getApprovedAnnouncements);
+router.get('/student/internship-announcements/:id',AnnouncementController.getAnnouncementbyId);
 
 module.exports = router;
   

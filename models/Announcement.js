@@ -18,7 +18,7 @@ const Announcement = sequelize.define('Announcement', {
   },
   status: {
     type: DataTypes.ENUM,
-    values: ['approved', 'waiting_for_approvation', 'not_approved'],
+    values: ['approved', 'waiting_for_approvation'],
     allowNull: false,
     defaultValue: 'waiting_for_approvation'
   },

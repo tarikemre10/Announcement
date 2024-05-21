@@ -20,6 +20,27 @@ exports.getAnnouncementbyId = async function(announcement_id){
 
 }
 
+
+exports.getAnnouncementsbyStatus = async function(status) {
+    console.log("repo")
+    console.log(Announcement); // Ensure the correct model is imported
+    try {
+        // Fetch announcements where user_mail equals the provided userId
+        const announcements = await Announcement.findAll({
+            where: {
+                status: status,//It might have brackets.TEST
+            }
+        });
+
+        return announcements; // Return the list of announcements
+    } catch (error) {
+        console.error('Error fetching company announcements:', error);
+        throw error; // Rethrow the error for error handling in the caller function
+    }
+}
+
+//Company
+
 exports.getCompanyAnnouncements = async function(userId) {
     console.log("repo")
     console.log(Announcement); // Ensure the correct model is imported
@@ -43,7 +64,6 @@ exports.saveInternshipAnnouncement = async function(announcementData) {
     console.log(Announcement);
     try{
         await Announcement.create({
-            id: announcementData.id,
             user_mail: announcementData.user_mail,
             announcement_type: announcementData.announcement_type,
             content: announcementData.content,
@@ -76,7 +96,6 @@ exports.updateInternshipAnnouncement = async function(announcementData) {
         } else {
             // If the announcement doesn't exist, create a new one
             await Announcement.create({
-                id: announcementData.id,
                 user_mail: announcementData.user_mail,
                 announcement_type: announcementData.announcement_type,
                 content: announcementData.content,
@@ -89,8 +108,6 @@ exports.updateInternshipAnnouncement = async function(announcementData) {
         console.log(e);
     }
 }
-
-
 
 
 exports.deleteAnnouncementbyId = async function(announcement_id) {
@@ -117,3 +134,34 @@ exports.deleteAnnouncementbyId = async function(announcement_id) {
         throw error; // Rethrow the error for error handling in the caller function
     }
 };
+
+
+//Admin
+
+exports.updateAnnouncementStatus = async function(announcementId, newStatus) {
+    console.log("repo");
+    console.log(announcementId);
+
+    try {
+        // Find the announcement by ID
+        const announcement = await Announcement.findOne({
+            where: { id: announcementId }
+        });
+
+        // Check if the announcement exists
+        if (!announcement) {
+            console.log(`Announcement with ID ${announcementId} not found.`);
+            return { message: `Announcement with ID ${announcementId} not found.` };
+        }
+
+        // Update the announcement's status
+        await announcement.update({ status: newStatus });
+
+        console.log(`Announcement with ID ${announcementId} updated successfully.`);
+        return { message: `Announcement with ID ${announcementId} updated successfully.` };
+    } catch (error) {
+        console.error('Error updating announcement status:', error);
+        throw error; // Rethrow the error for error handling in the caller function
+    }
+};
+
