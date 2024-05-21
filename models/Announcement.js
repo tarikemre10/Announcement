@@ -11,7 +11,6 @@ const Announcement = sequelize.define('Announcement', {
   user_mail: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
   },
   announcement_type: {
     type: DataTypes.STRING,
