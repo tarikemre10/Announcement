@@ -1,107 +1,123 @@
 const AnnouncementRepository = require('../repositories/announcement_repository');
 
-
-
-
-exports.getAnnouncementbyId = async (req, res) =>{
+// Function to handle getAnnouncementbyId
+exports.getAnnouncementById = async (msgContent, channel, message) => {
     try {
-        console.log("ANnouncement:", req.params.id);// Ifetched this from 
-        announcement = await AnnouncementRepository.getAnnouncementbyId(req.params.id);// UserId might be different
-        res.json(announcement);
-        console.log("Announcement:", req.params.id);
+        const announcement = await AnnouncementRepository.getAnnouncementById(msgContent.id);
+        channel.sendToQueue(message.properties.replyTo, Buffer.from(JSON.stringify(announcement)), {
+            correlationId: message.properties.correlationId
+        });
     } catch (error) {
-        console.log("controller/getCompany");
-        console.log(error);
+        console.error(error);
+        channel.sendToQueue(message.properties.replyTo, Buffer.from(JSON.stringify({ error: 'Failed to fetch announcement' })), {
+            correlationId: message.properties.correlationId
+        });
     }
-}
+};
 
-//Company
-exports.getCompanyAnnouncements = async (req, res) =>{
+// Function to handle getCompanyAnnouncements
+exports.getCompanyAnnouncements = async (msgContent, channel, message) => {
     try {
-            console.log("USERID:", req.query.UserId);// Ifetched this from 
-            announcements = await AnnouncementRepository.getCompanyAnnouncements(req.query.UserId);// UserId might be different
-            res.json(announcements);
-            console.log("USERID:", req.query.UserId);
+        const announcements = await AnnouncementRepository.getCompanyAnnouncements(msgContent.UserId);
+        channel.sendToQueue(message.properties.replyTo, Buffer.from(JSON.stringify(announcements)), {
+            correlationId: message.properties.correlationId
+        });
     } catch (error) {
-        console.log("controller/getCompany");
-        console.log(error);
+        console.error(error);
+        channel.sendToQueue(message.properties.replyTo, Buffer.from(JSON.stringify({ error: 'Failed to fetch company announcements' })), {
+            correlationId: message.properties.correlationId
+        });
     }
-}
+};
 
-
-exports.createInternshipAnnouncement = async (req, res) =>{
+// Function to handle createInternshipAnnouncement
+exports.createInternshipAnnouncement = async (msgContent, channel, message) => {
     try {
-        const { id, user_mail, announcement_type, content, file_path } = req.body;
-        console.log("controller");
-        console.log(req.body);
+        const { id, user_mail, announcement_type, content, file_path } = msgContent;
         await AnnouncementRepository.saveInternshipAnnouncement({ id, user_mail, announcement_type, content, file_path });
-        res.status(200);
-        } catch (error) {
-        console.log(error);
-        res.status(500).send('Failed to create user');
-        }
-}
+        channel.sendToQueue(message.properties.replyTo, Buffer.from(JSON.stringify({ success: true })), {
+            correlationId: message.properties.correlationId
+        });
+    } catch (error) {
+        console.error(error);
+        channel.sendToQueue(message.properties.replyTo, Buffer.from(JSON.stringify({ error: 'Failed to create announcement' })), {
+            correlationId: message.properties.correlationId
+        });
+    }
+};
 
-exports.updateInternshipAnnouncement = async (req, res) =>{
+// Function to handle updateInternshipAnnouncement
+exports.updateInternshipAnnouncement = async (msgContent, channel, message) => {
     try {
-        const { id, user_mail, announcement_type, content, file_path } = req.body;
-        console.log("controller");
-        console.log(req.body);
+        const { id, user_mail, announcement_type, content, file_path } = msgContent;
         await AnnouncementRepository.updateInternshipAnnouncement({ id, user_mail, announcement_type, content, file_path });
-        res.status(200);
-        } catch (error) {
-        console.log(error);
-        res.status(500).send('Failed to create user');
-        }
-}
-
-exports.deleteInternshipAnnouncement = async (req, res) =>{
-    try {
-        console.log("ANnouncement:", req.params.id);// Ifetched this from 
-        await AnnouncementRepository.deleteAnnouncementbyId(req.params.id);// UserId might be different
-        console.log("Announcement:", req.params.id);
-        //TO-DO notification will sent.
+        channel.sendToQueue(message.properties.replyTo, Buffer.from(JSON.stringify({ success: true })), {
+            correlationId: message.properties.correlationId
+        });
     } catch (error) {
-        console.log("controller/getCompany");
-        console.log(error);
+        console.error(error);
+        channel.sendToQueue(message.properties.replyTo, Buffer.from(JSON.stringify({ error: 'Failed to update announcement' })), {
+            correlationId: message.properties.correlationId
+        });
     }
-}
+};
 
-
-//Admin
-
-exports.getWaitingAnnouncements = async (req, res) =>{
+// Function to handle deleteInternshipAnnouncement
+exports.deleteInternshipAnnouncement = async (msgContent, channel, message) => {
     try {
-            announcements = await AnnouncementRepository.getAnnouncementsbyStatus("waiting_for_approvation");// UserId might be different
-            res.json(announcements);      
+        await AnnouncementRepository.deleteAnnouncementById(msgContent.id);
+        channel.sendToQueue(message.properties.replyTo, Buffer.from(JSON.stringify({ success: true })), {
+            correlationId: message.properties.correlationId
+        });
     } catch (error) {
-        console.log("controller/getCompany");
-        console.log(error);
+        console.error(error);
+        channel.sendToQueue(message.properties.replyTo, Buffer.from(JSON.stringify({ error: 'Failed to delete announcement' })), {
+            correlationId: message.properties.correlationId
+        });
     }
-}
+};
 
-exports.approveAnnouncement = async (req, res) =>{
+// Function to handle getWaitingAnnouncements
+exports.getWaitingAnnouncements = async (msgContent, channel, message) => {
     try {
-        await AnnouncementRepository.updateAnnouncementStatus(req.params.id, "approved");
-        res.status(200);
+        const announcements = await AnnouncementRepository.getAnnouncementsByStatus("waiting_for_approvation");
+        channel.sendToQueue(message.properties.replyTo, Buffer.from(JSON.stringify(announcements)), {
+            correlationId: message.properties.correlationId
+        });
     } catch (error) {
-        console.log(error);
-        res.status(500).send('Failed to create user');
+        console.error(error);
+        channel.sendToQueue(message.properties.replyTo, Buffer.from(JSON.stringify({ error: 'Failed to fetch waiting announcements' })), {
+            correlationId: message.properties.correlationId
+        });
     }
-}
+};
 
-//Student
-
-exports.getApprovedAnnouncements = async (req, res) =>{
+// Function to handle approveAnnouncement
+exports.approveAnnouncement = async (msgContent, channel, message) => {
     try {
-            announcements = await AnnouncementRepository.getAnnouncementsbyStatus("approved");// UserId might be different
-            res.json(announcements);      
+        await AnnouncementRepository.updateAnnouncementStatus(msgContent.id, "approved");
+        channel.sendToQueue(message.properties.replyTo, Buffer.from(JSON.stringify({ success: true })), {
+            correlationId: message.properties.correlationId
+        });
     } catch (error) {
-        console.log(error);
+        console.error(error);
+        channel.sendToQueue(message.properties.replyTo, Buffer.from(JSON.stringify({ error: 'Failed to approve announcement' })), {
+            correlationId: message.properties.correlationId
+        });
     }
-}
+};
 
-
-
-
-
+// Function to handle getApprovedAnnouncements
+exports.getApprovedAnnouncements = async (msgContent, channel, message) => {
+    try {
+        const announcements = await AnnouncementRepository.getAnnouncementsByStatus("approved");
+        channel.sendToQueue(message.properties.replyTo, Buffer.from(JSON.stringify(announcements)), {
+            correlationId: message.properties.correlationId
+        });
+    } catch (error) {
+        console.error(error);
+        channel.sendToQueue(message.properties.replyTo, Buffer.from(JSON.stringify({ error: 'Failed to fetch approved announcements' })), {
+            correlationId: message.properties.correlationId
+        });
+    }
+};

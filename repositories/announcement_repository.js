@@ -1,6 +1,6 @@
 const Announcement = require("../models/Announcement");
 
-exports.getAnnouncementbyId = async function(announcement_id){
+exports.getAnnouncementById = async function(announcement_id){
 
     console.log("repo")
     console.log(announcement_id); // Ensure the correct model is imported
@@ -11,7 +11,7 @@ exports.getAnnouncementbyId = async function(announcement_id){
                 id: announcement_id
             }
         });
-
+        
         return announcement; // Return the list of announcements
     } catch (error) {
         console.error('Error fetching company announcements:', error);
@@ -21,7 +21,7 @@ exports.getAnnouncementbyId = async function(announcement_id){
 }
 
 
-exports.getAnnouncementsbyStatus = async function(status) {
+exports.getAnnouncementsByStatus = async function(status) {
     console.log("repo")
     console.log(Announcement); // Ensure the correct model is imported
     try {
@@ -110,7 +110,7 @@ exports.updateInternshipAnnouncement = async function(announcementData) {
 }
 
 
-exports.deleteAnnouncementbyId = async function(announcement_id) {
+exports.deleteAnnouncementById = async function(announcement_id) {
     console.log("repo");
     console.log(announcement_id);
 
