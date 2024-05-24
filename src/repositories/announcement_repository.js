@@ -1,4 +1,5 @@
 const Announcement = require("../models/Announcement");
+const CoordinatorAnnouncement = require("../models/Coordinator_Announcement");
 
 exports.getAnnouncementById = async function(announcement_id){
 
@@ -65,12 +66,10 @@ exports.saveInternshipAnnouncement = async function(announcementData) {
     try{
         await Announcement.create({
             user_mail: announcementData.user_mail,
-            announcement_type: announcementData.announcement_type,
             title: announcementData.title,
             position: announcementData.position,
             content: announcementData.content,
             file_path: announcementData.file_path
-            // Add other fields as needed
         });
     } catch(e){
         console.log("repo/saveInternship");
@@ -90,7 +89,6 @@ exports.updateInternshipAnnouncement = async function(announcementData) {
             // If the announcement exists, update its attributes
             await existingAnnouncement.update({
                 user_mail: announcementData.user_mail,
-                announcement_type: announcementData.announcement_type,
                 title: announcementData.title,
                 position: announcementData.position,
                 content: announcementData.content,
@@ -101,7 +99,6 @@ exports.updateInternshipAnnouncement = async function(announcementData) {
             // If the announcement doesn't exist, create a new one
             await Announcement.create({
                 user_mail: announcementData.user_mail,
-                announcement_type: announcementData.announcement_type,
                 title: announcementData.title,
                 position: announcementData.position,
                 content: announcementData.content,
@@ -144,6 +141,20 @@ exports.deleteAnnouncementById = async function(announcement_id) {
 
 //Admin
 
+exports.getAllCompanyAnnouncements = async function(userId) {
+    console.log("repo")
+    console.log(Announcement); // Ensure the correct model is imported
+    try {
+        // Fetch announcements where user_mail equals the provided userId
+        const announcements = await Announcement.findAll({});
+
+        return announcements; // Return the list of announcements
+    } catch (error) {
+        console.error('Error fetching company announcements:', error);
+        throw error; // Rethrow the error for error handling in the caller function
+    }
+}
+
 exports.updateAnnouncementStatus = async function(announcementId, newStatus) {
     console.log("repo");
     console.log(announcementId);
@@ -171,3 +182,101 @@ exports.updateAnnouncementStatus = async function(announcementId, newStatus) {
     }
 };
 
+exports.saveCoordinatorAnnouncement = async function(announcementData) {
+    try{
+        await CoordinatorAnnouncement.create({
+            user_mail: announcementData.user_mail,
+            title: announcementData.title,
+            content: announcementData.content,
+            file_path: announcementData.file_path
+        });
+    } catch(e){
+        console.log(e);
+    }
+}
+
+exports.updateCoordinatorAnnouncement = async function(announcementData) {
+    try {
+        // Check if the announcement with the same ID already exists
+        const existingAnnouncement = await CoordinatorAnnouncement.findByPk(announcementData.id);
+
+        await existingAnnouncement.update({
+            user_mail: announcementData.user_mail,
+            title: announcementData.title,
+            content: announcementData.content,
+            file_path: announcementData.file_path
+            // Add other fields as needed
+        });
+        
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+exports.deleteCoordinatorAnnouncementById = async function(announcement_id) {
+    try {
+        // Attempt to delete the announcement with the provided ID
+        const deleted = await CoordinatorAnnouncement.destroy({
+            where: {
+                id: announcement_id
+            }
+        });
+
+        if (deleted) {
+            console.log(`Announcement with ID ${announcement_id} deleted successfully.`);
+            return { message: `Announcement with ID ${announcement_id} deleted successfully.` };
+        } else {
+            console.log(`Announcement with ID ${announcement_id} not found.`);
+            return { message: `Announcement with ID ${announcement_id} not found.` };
+        }
+    } catch (error) {
+        console.error('Error deleting announcement:', error);
+        throw error; 
+    }
+};
+
+exports.getCoordinatorAnnouncements = async function() {
+    console.log("repo")
+    console.log(Announcement); // Ensure the correct model is imported
+    try {
+        // Fetch announcements where user_mail equals the provided userId
+        const announcements = await CoordinatorAnnouncement.findAll({});
+
+        return announcements; // Return the list of announcements
+    } catch (error) {
+        console.error('Error fetching company announcements:', error);
+        throw error; // Rethrow the error for error handling in the caller function
+    }
+}
+
+exports.getCoordinatorAnnouncementsforCoordinator = async function(user_mail) {
+    console.log("repo")
+    console.log(Announcement); // Ensure the correct model is imported
+    try {
+        // Fetch announcements where user_mail equals the provided userId
+        const announcements = await CoordinatorAnnouncement.findAll({
+            where: { user_mail: user_mail }
+        });
+
+        return announcements; // Return the list of announcements
+    } catch (error) {
+        console.error('Error fetching company announcements:', error);
+        throw error; // Rethrow the error for error handling in the caller function
+    }
+}
+
+
+exports.getCoordinatorAnnouncementById = async function(announcement_id){
+    try {
+        const announcement = await CoordinatorAnnouncement.findAll({
+            where: {
+                id: announcement_id
+            }
+        });
+        
+        return announcement; // Return the list of announcements
+    } catch (error) {
+        console.error('Error fetching company announcements:', error);
+        throw error; // Rethrow the error for error handling in the caller function
+    }
+}

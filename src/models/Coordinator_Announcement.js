@@ -2,7 +2,7 @@
 const { DataTypes, ENUM } = require('sequelize');
 const { sequelize } = require('../database_connection');
 
-const Announcement = sequelize.define('Announcement', {
+const CoordinatorAnnouncement = sequelize.define('Announcement', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -12,17 +12,7 @@ const Announcement = sequelize.define('Announcement', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  status: {
-    type: DataTypes.ENUM,
-    values: ['approved', 'waiting_for_approvation'],
-    allowNull: false,
-    defaultValue: 'waiting_for_approvation'
-  },
   title: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  position: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -34,9 +24,9 @@ const Announcement = sequelize.define('Announcement', {
     type: DataTypes.STRING,
   },
 }, {
-  tableName: 'announcements'
+  tableName: 'coordinator_announcements'
 });
 
-Announcement.sync({});
+CoordinatorAnnouncement.sync({});
 
-module.exports = Announcement;
+module.exports = CoordinatorAnnouncement;
