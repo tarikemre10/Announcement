@@ -22,6 +22,14 @@ const Announcement = sequelize.define('Announcement', {
     allowNull: false,
     defaultValue: 'waiting_for_approvation'
   },
+  title: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  position: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   content: {
     type: DataTypes.STRING,
     allowNull: false,

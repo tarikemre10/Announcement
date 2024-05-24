@@ -13,22 +13,22 @@ const startRabbitMQConsumer = () => {
             const exchange = 'direct_logs';
             const queueName = 'announcementQueue';
             const routingKeys = [
-                'company.internship-announcements.get',
-                'company.internship-announcements.list',
-                'company.internship-announcements.create',
-                'company.internship-announcements.update',
-                'company.internship-announcements.delete',
-                'admin.waiting-announcements.list',
-                'admin.waiting-announcements.get',
-                'admin.waiting-announcements.approve',
-                'admin.waiting-announcements.reject',
-                'student.internship-announcements.list',
-                'student.internship-announcements.get'
+                'company.internship-announcements.get',//
+                'company.internship-announcements.list',//
+                'company.internship-announcements.create',//
+                'company.internship-announcements.update',//
+                'company.internship-announcements.delete',//
+                'admin.waiting-announcements.list',//
+                'admin.waiting-announcements.get',//
+                'admin.waiting-announcements.approve',//
+                'admin.waiting-announcements.reject',//
+                'student.internship-announcements.list',//
+                'student.internship-announcements.get'//
             ];
 
             channel.assertExchange(exchange, 'direct', { durable: false });
 
-            channel.assertQueue(queueName, { durable: true }, function(error2, q) {
+            channel.assertQueue(queueName, { durable: false}, function(error2, q) {
                 if (error2) throw error2;
 
                 console.log(`[*] Waiting for messages in queue ${queueName}. To exit press CTRL+C`);

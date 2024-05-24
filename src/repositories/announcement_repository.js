@@ -66,6 +66,8 @@ exports.saveInternshipAnnouncement = async function(announcementData) {
         await Announcement.create({
             user_mail: announcementData.user_mail,
             announcement_type: announcementData.announcement_type,
+            title: announcementData.title,
+            position: announcementData.position,
             content: announcementData.content,
             file_path: announcementData.file_path
             // Add other fields as needed
@@ -89,6 +91,8 @@ exports.updateInternshipAnnouncement = async function(announcementData) {
             await existingAnnouncement.update({
                 user_mail: announcementData.user_mail,
                 announcement_type: announcementData.announcement_type,
+                title: announcementData.title,
+                position: announcementData.position,
                 content: announcementData.content,
                 file_path: announcementData.file_path
                 // Add other fields as needed
@@ -98,6 +102,8 @@ exports.updateInternshipAnnouncement = async function(announcementData) {
             await Announcement.create({
                 user_mail: announcementData.user_mail,
                 announcement_type: announcementData.announcement_type,
+                title: announcementData.title,
+                position: announcementData.position,
                 content: announcementData.content,
                 file_path: announcementData.file_path
                 // Add other fields as needed
