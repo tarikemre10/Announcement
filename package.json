@@ -1,5 +1,5 @@
 {
-  "name": "announcement-service",
+  "name": "notification-service",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",

@@ -1,14 +1,21 @@
-// database/models/User.js
-const { DataTypes, ENUM } = require('sequelize');
 const { sequelize } = require('../database_connection');
+const { DataTypes } = require('sequelize');
 
-const CoordinatorAnnouncement = sequelize.define('Announcement', {
+const Notification = sequelize.define('Notification', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true
   },
-  user_mail: {
+  sender_mail: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  receiver_mail: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  notification_type: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -18,15 +25,11 @@ const CoordinatorAnnouncement = sequelize.define('Announcement', {
   },
   content: {
     type: DataTypes.STRING,
-    allowNull: false,
-  },
-  file_path: {
-    type: DataTypes.STRING,
   },
 }, {
-  tableName: 'coordinator_announcements'
+  tableName: 'notifications'
 });
 
-CoordinatorAnnouncement.sync({});
+Notification.sync({});
 
-module.exports = CoordinatorAnnouncement;
+module.exports = Notification;
